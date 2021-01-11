@@ -14,7 +14,11 @@ $app = AppFactory::create();
 
 function  addHeaders (Response $response) : Response {
     $response = $response
-    ->withHeader("Content-Type", "application/json");
+    ->withHeader("Content-Type", "application/json")
+    ->withHeader('Access-Control-Allow-Origin', '*')
+    ->withHeader('Access-Control-Allow-Headers', 'Content-Type,  Authorization')
+    ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS')
+    ->withHeader('Access-Control-Expose-Headers', 'Authorization');
 
     return $response;
 }
@@ -47,10 +51,12 @@ $app->get('/auth/{login}', function (Request $request, Response $response, $args
     $utilisateur = $utilisateurRepository->findOneBy(array('login' => $login));
     if ($utilisateur) {
         $data = array('nom' => $utilisateur->getNom(), 'prenom' => $utilisateur->getPrenom());
-        $response = addHeaders ($response);
+        
         $response = createJwT ($response);
+		$response = addHeaders ($response);
         $response->getBody()->write(json_encode($data));
     } else {
+		$response = addHeaders ($response);
         $response = $response->withStatus(401);
     }
 
@@ -103,6 +109,7 @@ $app->post('/register', function (Request $request, Response $response, $args) {
             $entityManager->persist($client);
             $entityManager->flush();
 
+			$response = addHeaders ($response);
             $response->getBody()->write(json_encode($body));
         }
 
@@ -133,7 +140,6 @@ $app->post('/login', function (Request $request, Response $response, $args) {
         $utilisateurRepository = $entityManager->getRepository('Utilisateur');
         $utilisateur = $utilisateurRepository->findOneBy(array('login' => $login, 'password' => $pass));
         if ($utilisateur and $login == $utilisateur->getLogin() and $pass == $utilisateur->getPassword()) {
-            $response = addHeaders ($response);
             $response = createJwT ($response);
             $data = array(
               'nom' => $utilisateur->getNom(),
@@ -146,7 +152,7 @@ $app->post('/login', function (Request $request, Response $response, $args) {
               'civilite' => $utilisateur->getCivilite()
             );
 
-
+			$response = addHeaders ($response);
             $response->getBody()->write(json_encode($data));
         } else {
             $response->getBody()->write(json_encode($body));
