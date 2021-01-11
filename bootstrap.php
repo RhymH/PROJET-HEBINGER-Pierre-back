@@ -6,11 +6,11 @@ require_once "vendor/autoload.php";
 $isDevMode = true;
 $config = Setup::createYAMLMetadataConfiguration(array(__DIR__ . "/config/yaml"), $isDevMode);
 $conn = array(
-'host' => 'ec2-54-76-215-139.eu-west-1.compute.amazonaws.com',
+'host' => 'ec2-52-211-161-21.eu-west-1.compute.amazonaws.com',
 'driver' => 'pdo_pgsql',
-'user' => 'ruqpwocendgcek',
-'password' => '1b92aa286e3fb3ddaabd88df511e9587ac3540931b594bb628ba8ef1795de039',
-'dbname' => 'drfveo1ll66vf',
+'user' => 'atzdekcunqdnyc',
+'password' => '2a2243baad4be355b0814cc0a831b2341a7330041f5adab3a9e7765d25a0dc61',
+'dbname' => 'd4hssonrqf6bf8',
 'port' => '5432'
 );
 $entityManager = EntityManager::create($conn, $config);
