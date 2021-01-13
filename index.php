@@ -60,7 +60,12 @@ $app->post('/register', function (Request $request, Response $response, $args) {
     $mail = $body ['mail'] ?? "";
     $civilite = $body ['civilite'] ?? "";
 
-
+    if(!preg_match('/[a-zA-Z0-9]{1,20}/',$nom) || !preg_match('/[a-zA-Z0-9]{1,20}/',$prenom) || !preg_match('/[a-zA-Z0-9]{1,20}/',$ville) || !preg_match('/[a-zA-Z0-9]{1,20}/',$pays)|| !preg_match('/[a-zA-Z0-9]{1,20}/',$civilite)){
+      $err = true;
+    }
+    if(!preg_match('/[a-zA-Z0-9]{1,20}/',$login) || !preg_match('/[a-zA-Z0-9]{1,20}/',$pass)){
+      $err = true;
+    }
 
     if (!$err) {
 
@@ -111,12 +116,11 @@ $app->post('/login', function (Request $request, Response $response, $args) {
     $login = $body ['login'] ?? "";
     $pass = $body ['pass'] ?? "";
 
-    if (!preg_match("/[a-zA-Z0-9]{1,20}/",$login))   {
-        $err = true;
+    if(!preg_match('/[a-zA-Z0-9]{1,20}/',$login) || !preg_match('/[a-zA-Z0-9]{1,20}/',$pass)){
+      $err = true;
     }
-    if (!preg_match("/[a-zA-Z0-9]{1,20}/",$pass))  {
-        $err=true;
-    }
+
+
     if (!$err) {
         $utilisateurRepository = $entityManager->getRepository('Utilisateur');
         $utilisateur = $utilisateurRepository->findOneBy(array('login' => $login, 'password' => $pass));
@@ -156,7 +160,7 @@ $app->get('/all', function (Request $request, Response $response, $args) {
 
     $utilisateurRepository = $entityManager->getRepository('Utilisateur');
     $utilisateur = $utilisateurRepository->findAll();
-	
+
 	$response = addHeaders ($response);
     $response->getBody()->write(json_encode($utilisateur));
 
